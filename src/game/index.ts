@@ -1,3 +1,6 @@
+import { GameField } from "./tetris";
+import { Tetromino } from "./tetris";
+
 const straightTetromino = [[1, 0], [1, 0], [1, 0], [1, 0]];
 const squareTetromino = [[1, 1], [1, 1]];
 const tTetromino = [[1, 0], [1, 1], [1, 0]];
@@ -9,10 +12,11 @@ export const startGame = (canvas: HTMLCanvasElement) => {
     canvas.width = innerWidth;
     canvas.height = innerHeight;
     const widthxl = (innerWidth - 984) / 2;
+    const field = new GameField(480, 560, 40);
+    const tetromino = new Tetromino('red', straightTetromino);
     if (ctx) {
         ctx.fillStyle = 'black';
-        ctx.fillRect(widthxl, 20, 984, 600);
-        ctx.fillStyle = 'white';
-        ctx.fillRect(widthxl + 100, 40, 400, 560);
+        ctx.fillRect(277, 20, 984, 600);
+        field.drawField(ctx, 377, 40);
     }
 }
