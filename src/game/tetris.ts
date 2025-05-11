@@ -3,22 +3,68 @@ const pxSize = 40;
 export class Tetromino {
     color: string;
     tetromino: number[][];
-    constructor(color: string, tetromino: number[][]) {
+    position: { x: number; y: number };    
+    constructor(color: string, tetromino: number[][], posX: number, posY: number) {
         this.color = color;
-        this.tetromino = tetromino;
+        this.tetromino = tetromino;        
+        this.position = { x: posX, y: posY };
     }
 
-    draw(ctx: CanvasRenderingContext2D, startX: number, startY: number): void {
-        this.tetromino.forEach((cell, i) => {
-            const y = startY + i * pxSize;
-            ctx.fillStyle = this.color;
-            if (cell[0] === 1) {
-                ctx.fillRect(startX, y, pxSize, pxSize);    
+    draw(ctx: CanvasRenderingContext2D): void {
+        for (let i = 0; i < this.tetromino.length; i++) {
+            for (let j = 0; j < this.tetromino[i].length; j++) {
+                const y = this.position.y + i * pxSize;
+                ctx.fillStyle = this.color;
+                if (this.tetromino[i][j] === 1) {
+                    ctx.fillRect(this.position.x + j * pxSize, y, pxSize - 1, pxSize - 1);    
+                }
             }
-            if (cell[1] === 1) {
-                ctx.fillRect(startX + 40, y, pxSize, pxSize);    
+        }
+    }
+
+    rotate() {
+        const n = this.tetromino.length;
+        const newTetromino: number[][] = [];
+        for (let y = 0; y < n; y++) {
+            newTetromino[y] = [];
+            for (let x = 0; x < n; x++) {
+                newTetromino[y][x] = this.tetromino[n - x - 1][y];
             }
-        })
+        }
+        this.matrixShiftToTopLeft(newTetromino);
+    }
+
+    matrixShiftToTopLeft(matrix: number[][]) {
+        const n = matrix.length;
+        let minRow = n, minCol = n;
+        for (let y = 0; y < n; y++) {
+            for (let x = 0; x < n; x++) {
+            if (matrix[y][x] === 1) {
+                if (y < minRow) minRow = y;
+                if (x < minCol) minCol = x;
+            }
+            }
+        }
+
+        const shifted = Array.from({ length: n }, () => Array(n).fill(0));
+        for (let y = minRow; y < n; y++) {
+            for (let x = minCol; x < n; x++) {
+            if (matrix[y][x] === 1) {
+                shifted[y - minRow][x - minCol] = 1;
+            }
+            }
+        }
+        this.tetromino = shifted;
+    }
+
+    moveToRight() {
+        // move tetromino to the right
+        this.position.x += pxSize;
+    }
+
+    moveToLeft() {
+        // move tetromino to the left
+        this.position.x -= pxSize;
     }
 }
 
