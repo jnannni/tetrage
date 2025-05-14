@@ -7,6 +7,9 @@ const tTetromino = [[1, 1, 1, 0], [0, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 const lTetromino = [[1, 0, 0, 0], [1, 0, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0]];
 const skewTetromino = [[0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 const pxPerCell = 40;
+let start = 0;
+const animTime = 2000;
+let count = 0;
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D | null;
 let field: GameField;
@@ -27,7 +30,14 @@ export const startGame = (canvasID: HTMLCanvasElement) => {
     gameLoop();
 }
 
-function gameLoop() {
+function gameLoop(timestamp: number = 0) {
+    const deltaTime = timestamp - start;
+    start = timestamp;
+    count += deltaTime;
+    if (count > animTime) {
+        tetromino.moveDown();
+        count = 0;
+    }
     if (ctx) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = 'black';

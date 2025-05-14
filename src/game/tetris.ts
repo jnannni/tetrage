@@ -23,6 +23,7 @@ export class Tetromino {
     }
 
     rotate() {
+        // rotate tetromino (player input)
         const n = this.tetromino.length;
         const newTetromino: number[][] = [];
         for (let y = 0; y < n; y++) {
@@ -58,13 +59,18 @@ export class Tetromino {
     }
 
     moveToRight() {
-        // move tetromino to the right
+        // move tetromino to the right (player input)
         this.position.x += pxSize;
     }
 
     moveToLeft() {
-        // move tetromino to the left
+        // move tetromino to the left (player input)
         this.position.x -= pxSize;
+    }
+
+    moveDown() {
+        // move tetromino down
+        this.position.y += pxSize;
     }
 }
 
